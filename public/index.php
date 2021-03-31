@@ -6,21 +6,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 $request = Request::createFromGlobals();
-$response = new Response();
+$routes = include __DIR__ . '/../src/app.php';
 
-$map = [
-    '/hello' => __DIR__.'/../src/pages/hello.php',
-    '/bye'   => __DIR__.'/../src/pages/bye.php',
-];
+$context = new \Symfony\Component\Routing\RequestContext();
+$context->fromRequest($request);
+$matcher = new \Symfony\Component\Routing\Matcher\UrlMatcher($routes, $context);
 
-$path = $request->getPathInfo();
-if (isset($map[$path])) {
+try {
+    extract($matcher->match($request->getPathInfo()), EXTR_SKIP);
     ob_start();
-    include $map[$path];
-    $response->setContent(ob_get_clean());
-} else {
-    $response->setStatusCode(404);
-    $response->setContent('Not Found');
+    include sprintf(__DIR__ . '/../src/pages/%s.php', $_route);
+
+    $response = new Response(ob_get_clean());
+} catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
+    $response = new Response('Not Found', 404);
+} catch (Exception $e) {
+    $response = new Response('An error occurred', 500);
 }
 
 $response->send();
