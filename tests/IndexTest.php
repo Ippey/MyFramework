@@ -6,9 +6,9 @@ class IndexTest extends TestCase
 {
     public function testHello()
     {
-        $_GET['name'] = 'ippei';
+        $_SERVER['REQUEST_URI'] = '/hello/ippei';
         ob_start();
-        include 'index.php';
+        include 'public/index.php';
         $content = ob_get_clean();
 
         $this->assertEquals('Hello ippei', $content);
