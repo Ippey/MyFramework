@@ -1,0 +1,14 @@
+{
+    "name": "ippey/own-framework",
+    "description": "My own framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ippei Sumida",
+            "email": "ippey.s@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0"
+    }
+}
