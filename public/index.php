@@ -16,6 +16,7 @@ $map = [
 $path = $request->getPathInfo();
 if (isset($map[$path])) {
     ob_start();
+    extract($request->query->all(), EXTR_SKIP);
     include sprintf(__DIR__ . '/../src/pages/%s.php', $map[$path]);
     $response->setContent(ob_get_clean());
 } else {
