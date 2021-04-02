@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,12 @@ try {
 
 $response->send();
 
-
+/**
+ * render template
+ *
+ * @param Request $request
+ * @return Response
+ */
 function render_template(Request $request)
 {
     extract($request->attributes->all(), EXTR_SKIP);
