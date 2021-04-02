@@ -29,13 +29,7 @@ $routes->add('bye', new Route('/bye'));
 
 $routes->add('leap_year', new Route('/is_leap_year/{year}', [
     'year' => null,
-    '_controller' => function (Request $request) {
-        if (is_leap_year($request->attributes->get('year'))) {
-            return new Response('Yep, this is a leap year.');
-        }
-
-        return new Response('Nope, this is not a leap year.');
-    },
+    '_controller' => [new LeapYearController(), 'index'],
 ]));
 
 return $routes;
