@@ -5,6 +5,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+class LeapYearController
+{
+    public function index($year)
+    {
+        if (is_leap_year($year)) {
+            return new Response('Yep, this is a leap year.');
+        }
+
+        return new Response('Nope, this is not a leap year.');
+    }
+}
+
 function is_leap_year($year = null)
 {
     if (null === $year) {
