@@ -3,6 +3,7 @@
 namespace Splash\Tests;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Splash\Framework;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
@@ -29,7 +30,7 @@ class FrameworkTest extends TestCase
      */
     public function testErrorHandling()
     {
-        $framework = $this->getFrameworkForException(new \RuntimeException());
+        $framework = $this->getFrameworkForException(new RuntimeException());
 
         $response = $framework->handle(new Request());
 
