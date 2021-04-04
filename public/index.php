@@ -2,7 +2,11 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Splash\Event\ResponseEvent;
+use Splash\EventListener\ContentLengthListener;
+use Splash\EventListener\GoogleListener;
 use Splash\Framework;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -15,10 +19,14 @@ $routes = include __DIR__ . '/../src/app.php';
 $context = new RequestContext();
 $matcher = new UrlMatcher($routes, $context);
 
+$eventDispatcher = new EventDispatcher();
+$eventDispatcher->addSubscriber(new GoogleListener());
+$eventDispatcher->addSubscriber(new ContentLengthListener());
+
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
 
-$framework = new Framework($matcher, $controllerResolver, $argumentResolver);
+$framework = new Framework($eventDispatcher, $matcher, $controllerResolver, $argumentResolver);
 $response = $framework->handle($request);
 
 $response->send();
