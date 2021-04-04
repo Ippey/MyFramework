@@ -5,6 +5,7 @@ namespace Splash\Tests;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Splash\Framework;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -43,6 +44,8 @@ class FrameworkTest extends TestCase
      */
     private function getFrameworkForException($exception): Framework
     {
+        $eventDispathcer = $this->createMock(EventDispatcher::class);
+
         $matcher = $this->createMock(Routing\Matcher\UrlMatcherInterface::class);
         // use getMock() on PHPUnit 5.3 or below
         // $matcher = $this->getMock(Routing\Matcher\UrlMatcherInterface::class);
@@ -59,6 +62,6 @@ class FrameworkTest extends TestCase
         $controllerResolver = $this->createMock(ControllerResolverInterface::class);
         $argumentResolver = $this->createMock(ArgumentResolverInterface::class);
 
-        return new Framework($matcher, $controllerResolver, $argumentResolver);
+        return new Framework($eventDispathcer, $matcher, $controllerResolver, $argumentResolver);
     }
 }

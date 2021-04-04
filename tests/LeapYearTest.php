@@ -7,6 +7,7 @@ namespace Splash\Tests;
 use Calendar\Controller\LeapYearController;
 use PHPUnit\Framework\TestCase;
 use Splash\Framework;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -17,6 +18,8 @@ class LeapYearTest extends TestCase
 {
     public function testControllerResponse()
     {
+
+        $eventDispatcher = new EventDispatcher();
         $matcher = $this->createMock(UrlMatcherInterface::class);
         // use getMock() on PHPUnit 5.3 or below
         // $matcher = $this->getMock(Routing\Matcher\UrlMatcherInterface::class);
@@ -38,7 +41,7 @@ class LeapYearTest extends TestCase
         $controllerResolver = new ControllerResolver();
         $argumentResolver = new ArgumentResolver();
 
-        $framework = new Framework($matcher, $controllerResolver, $argumentResolver);
+        $framework = new Framework($eventDispatcher, $matcher, $controllerResolver, $argumentResolver);
 
         $response = $framework->handle(new Request());
 
