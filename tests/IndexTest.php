@@ -1,5 +1,7 @@
 <?php
 
+namespace Splash\Tests;
+
 use PHPUnit\Framework\TestCase;
 
 class IndexTest extends TestCase
