@@ -25,6 +25,18 @@ class FrameworkTest extends TestCase
     }
 
     /**
+     * test internal server error
+     */
+    public function testErrorHandling()
+    {
+        $framework = $this->getFrameworkForException(new \RuntimeException());
+
+        $response = $framework->handle(new Request());
+
+        $this->assertEquals(500, $response->getStatusCode());
+    }
+
+    /**
      * @param $exception
      * @return Framework
      */
