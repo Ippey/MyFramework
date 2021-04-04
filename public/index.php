@@ -15,10 +15,32 @@ $routes = include __DIR__ . '/../src/app.php';
 $context = new RequestContext();
 $matcher = new UrlMatcher($routes, $context);
 
+$eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+$eventDispatcher->addListener('response', function (\Splash\Event\ResponseEvent $event) {
+    $response = $event->getResponse();
+
+    if ($response->isRedirection()
+        || ($response->headers->has('Content-Type') && false == strpos($response->headers->get('Content-Type'), 'html'))
+        || 'html' !== $event->getRequest()->getRequestFormat('html')
+    ) {
+        return;
+    }
+
+    $response->setContent($response->getContent() . 'GA CODE');
+});
+$eventDispatcher->addListener('response', function (\Splash\Event\ResponseEvent $event) {
+    $response = $event->getResponse();
+    $headers = $response->headers;
+
+    if (!$headers->has('Content-Length') && !$headers->has('Transfer-Encoding')) {
+        $headers->set('Content-Length', strlen($response->getContent()));
+    }
+}, -255);
+
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
 
-$framework = new Framework($matcher, $controllerResolver, $argumentResolver);
+$framework = new Framework($eventDispatcher, $matcher, $controllerResolver, $argumentResolver);
 $response = $framework->handle($request);
 
 $response->send();
