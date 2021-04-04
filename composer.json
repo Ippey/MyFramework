@@ -22,5 +22,8 @@
             "": "src/",
             "Splash\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     }
 }
