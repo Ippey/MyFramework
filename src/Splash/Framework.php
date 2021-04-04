@@ -12,11 +12,11 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
 class Framework
 {
-    /** @var UrlMatcherInterface  */
+    /** @var UrlMatcherInterface */
     private UrlMatcherInterface $matcher;
-    /** @var ControllerResolverInterface  */
+    /** @var ControllerResolverInterface */
     private ControllerResolverInterface $controllerResolver;
-    /** @var ArgumentResolverInterface  */
+    /** @var ArgumentResolverInterface */
     private ArgumentResolverInterface $argumentResolver;
 
     public function __construct(UrlMatcherInterface $matcher, ControllerResolverInterface $controllerResolver, ArgumentResolverInterface $argumentResolver)

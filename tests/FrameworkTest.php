@@ -12,6 +12,9 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class FrameworkTest extends TestCase
 {
+    /**
+     * test not found
+     */
     public function testNotFoundHandling()
     {
         $framework = $this->getFrameworkForException(new ResourceNotFoundException());
@@ -21,9 +24,12 @@ class FrameworkTest extends TestCase
         $this->assertEquals(404, $response->getStatusCode());
     }
 
-    private function getFrameworkForException($exception)
+    /**
+     * @param $exception
+     * @return Framework
+     */
+    private function getFrameworkForException($exception): Framework
     {
-        /** @var Routing\Matcher\UrlMatcherInterface $matcher */
         $matcher = $this->createMock(Routing\Matcher\UrlMatcherInterface::class);
         // use getMock() on PHPUnit 5.3 or below
         // $matcher = $this->getMock(Routing\Matcher\UrlMatcherInterface::class);
@@ -31,16 +37,13 @@ class FrameworkTest extends TestCase
         $matcher
             ->expects($this->once())
             ->method('match')
-            ->will($this->throwException($exception))
-        ;
+            ->will($this->throwException($exception));
         $matcher
             ->expects($this->once())
             ->method('getContext')
-            ->will($this->returnValue($this->createMock(Routing\RequestContext::class)))
-        ;
-        /** @var ControllerResolverInterface $controllerResolver */
+            ->will($this->returnValue($this->createMock(Routing\RequestContext::class)));
+
         $controllerResolver = $this->createMock(ControllerResolverInterface::class);
-        /** @var ArgumentResolverInterface $argumentResolver */
         $argumentResolver = $this->createMock(ArgumentResolverInterface::class);
 
         return new Framework($matcher, $controllerResolver, $argumentResolver);
