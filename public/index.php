@@ -2,7 +2,9 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Splash\Event\ResponseEvent;
 use Splash\Framework;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -15,20 +17,20 @@ $routes = include __DIR__ . '/../src/app.php';
 $context = new RequestContext();
 $matcher = new UrlMatcher($routes, $context);
 
-$eventDispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
-$eventDispatcher->addListener('response', function (\Splash\Event\ResponseEvent $event) {
+$eventDispatcher = new EventDispatcher();
+$eventDispatcher->addListener('response', function (ResponseEvent $event) {
     $response = $event->getResponse();
 
     if ($response->isRedirection()
         || ($response->headers->has('Content-Type') && false == strpos($response->headers->get('Content-Type'), 'html'))
-        || 'html' !== $event->getRequest()->getRequestFormat('html')
+        || 'html' !== $event->getRequest()->getRequestFormat()
     ) {
         return;
     }
 
     $response->setContent($response->getContent() . 'GA CODE');
 });
-$eventDispatcher->addListener('response', function (\Splash\Event\ResponseEvent $event) {
+$eventDispatcher->addListener('response', function (ResponseEvent $event) {
     $response = $event->getResponse();
     $headers = $response->headers;
 
