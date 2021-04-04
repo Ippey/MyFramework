@@ -5,9 +5,21 @@ namespace Splash\EventListener;
 
 
 use Splash\Event\ResponseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class GoogleListener
+class GoogleListener implements EventSubscriberInterface
 {
+    /**
+     * @return string[]
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return ['response' => 'onResponse'];
+    }
+
+    /**
+     * @param ResponseEvent $event
+     */
     public function onResponse(ResponseEvent $event)
     {
         $response = $event->getResponse();

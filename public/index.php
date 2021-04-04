@@ -20,8 +20,8 @@ $context = new RequestContext();
 $matcher = new UrlMatcher($routes, $context);
 
 $eventDispatcher = new EventDispatcher();
-$eventDispatcher->addListener('response', [new GoogleListener(), 'onResponse']);
-$eventDispatcher->addListener('response', [new ContentLengthListener(), 'onResponse'],  -255);
+$eventDispatcher->addSubscriber(new GoogleListener());
+$eventDispatcher->addSubscriber(new ContentLengthListener());
 
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
