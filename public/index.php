@@ -7,6 +7,7 @@ use Splash\EventListener\GoogleListener;
 use Splash\Framework;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 
 $request = Request::createFromGlobals();
-$requestStack = new \Symfony\Component\HttpFoundation\RequestStack();
+$requestStack = new RequestStack();
 $routes = include __DIR__ . '/../src/app.php';
 
 $context = new RequestContext();

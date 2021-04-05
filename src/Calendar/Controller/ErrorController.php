@@ -13,7 +13,7 @@ class ErrorController
      * @param FlattenException $exception
      * @return Response
      */
-    public function exception (FlattenException $exception): Response
+    public function exception(FlattenException $exception): Response
     {
         $message = 'Something went wrong. (' . $exception->getMessage() . ')';
 
