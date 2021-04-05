@@ -2,7 +2,6 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Splash\Event\ResponseEvent;
 use Splash\EventListener\ContentLengthListener;
 use Splash\EventListener\GoogleListener;
 use Splash\Framework;

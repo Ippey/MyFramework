@@ -39,7 +39,10 @@ class Framework implements HttpKernelInterface
         $this->argumentResolver = $argumentResolver;
     }
 
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    /**
+     * {@inheritDoc}
+     */
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true): Response
     {
         $this->matcher->getContext()->fromRequest($request);
 
@@ -49,6 +52,7 @@ class Framework implements HttpKernelInterface
             $controller = $this->controllerResolver->getController($request);
             $arguments = $this->argumentResolver->getArguments($request, $controller);
 
+            /** @var Response $response */
             $response = call_user_func_array($controller, $arguments);
         } catch (ResourceNotFoundException $e) {
             return new Response('Not Found', 404);
