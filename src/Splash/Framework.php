@@ -9,10 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
-class Framework
+class Framework implements HttpKernelInterface
 {
     /** @var UrlMatcherInterface */
     private UrlMatcherInterface $matcher;
@@ -38,7 +39,10 @@ class Framework
         $this->argumentResolver = $argumentResolver;
     }
 
-    public function handle(Request $request)
+    /**
+     * {@inheritDoc}
+     */
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true): Response
     {
         $this->matcher->getContext()->fromRequest($request);
 
@@ -48,6 +52,7 @@ class Framework
             $controller = $this->controllerResolver->getController($request);
             $arguments = $this->argumentResolver->getArguments($request, $controller);
 
+            /** @var Response $response */
             $response = call_user_func_array($controller, $arguments);
         } catch (ResourceNotFoundException $e) {
             return new Response('Not Found', 404);
