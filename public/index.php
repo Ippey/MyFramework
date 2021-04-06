@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
+use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpCache\Esi;
 use Symfony\Component\HttpKernel\HttpCache\HttpCache;
@@ -30,6 +31,8 @@ $eventDispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
 $eventDispatcher->addSubscriber(new GoogleListener());
 $eventDispatcher->addSubscriber(new ContentLengthListener());
 $eventDispatcher->addSubscriber(new ErrorListener('Calendar\Controller\ErrorController::exception'));
+$eventDispatcher->addSubscriber(new ResponseListener('UTF-8'));
+
 
 $controllerResolver = new ControllerResolver();
 $argumentResolver = new ArgumentResolver();
