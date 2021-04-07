@@ -3,8 +3,6 @@
 
 namespace Splash\Tests;
 
-
-use Calendar\Controller\LeapYearController;
 use PHPUnit\Framework\TestCase;
 use Splash\Framework;
 use Symfony\Component\EventDispatcher\EventDispatcher;
