@@ -7,8 +7,10 @@ use RuntimeException;
 use Splash\Framework;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -19,11 +21,9 @@ class FrameworkTest extends TestCase
      */
     public function testNotFoundHandling()
     {
+        $this->expectException(NotFoundHttpException::class);
         $framework = $this->getFrameworkForException(new ResourceNotFoundException());
-
         $response = $framework->handle(new Request());
-
-        $this->assertEquals(404, $response->getStatusCode());
     }
 
     /**
@@ -31,6 +31,7 @@ class FrameworkTest extends TestCase
      */
     public function testErrorHandling()
     {
+        $this->expectException(NotFoundHttpException::class);
         $framework = $this->getFrameworkForException(new RuntimeException());
 
         $response = $framework->handle(new Request());
@@ -44,24 +45,19 @@ class FrameworkTest extends TestCase
      */
     private function getFrameworkForException($exception): Framework
     {
-        $eventDispathcer = $this->createMock(EventDispatcher::class);
+        $eventDispatcher = $this->createMock(EventDispatcher::class);
 
         $matcher = $this->createMock(Routing\Matcher\UrlMatcherInterface::class);
         // use getMock() on PHPUnit 5.3 or below
         // $matcher = $this->getMock(Routing\Matcher\UrlMatcherInterface::class);
 
-        $matcher
-            ->expects($this->once())
-            ->method('match')
-            ->will($this->throwException($exception));
-        $matcher
-            ->expects($this->once())
-            ->method('getContext')
-            ->will($this->returnValue($this->createMock(Routing\RequestContext::class)));
-
+        $requestStack = $this->createMock(RequestStack::class);
         $controllerResolver = $this->createMock(ControllerResolverInterface::class);
+        $controllerResolver
+            ->method('getController')
+            ->will($this->returnValue(false));
         $argumentResolver = $this->createMock(ArgumentResolverInterface::class);
 
-        return new Framework($eventDispathcer, $matcher, $controllerResolver, $argumentResolver);
+        return new Framework($eventDispatcher, $controllerResolver, $requestStack, $argumentResolver);
     }
 }
