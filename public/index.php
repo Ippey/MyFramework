@@ -1,15 +1,17 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
+use Splash\Framework;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
-/** @var \Symfony\Component\DependencyInjection\ContainerBuilder $container */
+/** @var ContainerBuilder $container */
 $container = include __DIR__ . '/../src/container.php';
-$container->setParameter('routes', include __DIR__.'/../src/app.php');
+$container->setParameter('routes', include __DIR__ . '/../src/app.php');
 $request = Request::createFromGlobals();
 
-/** @var \Splash\Framework $framework */
+/** @var Framework $framework */
 $framework = $container->get('framework');
 
 $framework->handle($request)->send();
